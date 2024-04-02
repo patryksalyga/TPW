@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TPW.Model;
+using TPW.View;
 
 namespace TPW.ViewModel
 {
@@ -21,7 +22,10 @@ namespace TPW.ViewModel
 
         private void SimulationStart(object obj)
         {
-            MessageBox.Show(ScreenVal);
+            SimWindow simWindow = new SimWindow();
+            simWindow.Show();
+
+            Application.Current.MainWindow.Close();
         }
 
         private string _screenVal;
