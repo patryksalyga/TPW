@@ -6,8 +6,8 @@
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:TPW.View"
         mc:Ignorable="d"
-        Title="Symulacja" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Symulacja" Height="Auto" Width="Auto">
+    <Canvas x:Name="MyCanvas" Height="Auto" Width="Auto">
+
+    </Canvas>
 </mah:MetroWindow>

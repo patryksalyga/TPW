@@ -22,11 +22,12 @@ namespace TPW.ViewModel
 
         private void SimulationStart(object obj)
         {
-            SimWindow simWindow = new SimWindow();
-            simWindow.Show();
+            SimWindow simWindow = new SimWindow(Int32.Parse(ScreenVal));
+            //simWindow.Show();
 
             Application.Current.MainWindow.Close();
         }
+
 
         private string _screenVal;
 
@@ -51,5 +52,6 @@ namespace TPW.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

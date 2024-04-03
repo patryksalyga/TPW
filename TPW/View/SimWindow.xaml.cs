@@ -21,9 +21,14 @@ namespace TPW.View
     /// </summary>
     public partial class SimWindow : MetroWindow
     {
-        public SimWindow()
+        private readonly SimWindow _self;
+
+        public SimWindow(int n)
         {
             InitializeComponent();
+            _self = this;
+            DataContext = new SimViewModel(n, _self);
         }
     }
+
 }
