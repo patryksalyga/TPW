@@ -19,20 +19,44 @@ namespace TPW.ViewModel
             simWindow.Show();
             Circles circles = new Circles(n, simWindow.ActualHeight, simWindow.ActualWidth);
 
-         
-                foreach (var circle in circles.CirclesList)
-                {
+            Dictionary<Ellipse, Circle> ellipseCircleDict = new Dictionary<Ellipse, Circle>();
 
-                    var ellipse = new Ellipse
+            foreach (var circle in circles.CirclesList)
+            {
+                var ellipse = new Ellipse
+                {
+                    Width = circle.getRadius() * 2,
+                    Height = circle.getRadius() * 2,
+                    Fill = Brushes.Blue,
+                };
+                Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
+                Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
+                simWindow.MyCanvas.Children.Add(ellipse);
+
+                ellipseCircleDict[ellipse] = circle;
+            }
+
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    circles.updateCircles();
+
+                    simWindow.Dispatcher.Invoke(() =>
                     {
-                        Width = circle.getRadius() * 2,
-                        Height = circle.getRadius() * 2,
-                        Fill = Brushes.Blue,
-                    };
-                    Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
-                    Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
-                    simWindow.MyCanvas.Children.Add(ellipse);
+                        foreach (var pair in ellipseCircleDict)
+                        {
+                            var ellipse = pair.Key;
+                            var circle = pair.Value;
+                            Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
+                            Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
+                        }
+                    });
+
+                    Thread.Sleep(20);
                 }
+            }).Start();
         }
+
     }
 }

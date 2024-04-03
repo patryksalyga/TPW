@@ -20,5 +20,13 @@ namespace TPW.Model
             }
         }
 
+        public void updateCircles()
+        {
+            foreach (var circle in CirclesList)
+            {
+                circle.update();
+            }
+        }
+
     }
 }
