@@ -17,77 +17,87 @@ namespace TPW.ViewModel
     {
         public SimViewModel(int n, SimWindow simWindow)
         {
-            simWindow.Show();
-            Circles circles = new Circles(n, simWindow.ActualHeight, simWindow.ActualWidth);
-
-            Dictionary<Ellipse, Circle> ellipseCircleDict = new Dictionary<Ellipse, Circle>();
-
-            foreach (var circle in circles.CirclesList)
+            simWindow.Loaded += (s, e) =>
             {
-                var ellipse = new Ellipse
-                {
-                    Width = circle.getRadius() * 2,
-                    Height = circle.getRadius() * 2,
-                    Fill = Brushes.Blue,
-                };
-                Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
-                Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
-                simWindow.MyCanvas.Children.Add(ellipse);
 
-                ellipseCircleDict[ellipse] = circle;
-            }
+                Circles circles = new Circles(n, simWindow.ActualHeight - SystemParameters.WindowCaptionHeight, simWindow.ActualWidth);
 
-            foreach (var pair in ellipseCircleDict)
-            {
-                Task.Run(() =>
+                Dictionary<Ellipse, Circle> ellipseCircleDict = new Dictionary<Ellipse, Circle>();
+
+                foreach (var circle in circles.CirclesList)
                 {
-                    while (true)
+                    var ellipse = new Ellipse
                     {
-                        var ellipse = pair.Key;
-                        var circle = pair.Value;
+                        Width = circle.getRadius() * 2,
+                        Height = circle.getRadius() * 2,
+                        Fill = Brushes.Blue,
+                    };
+                    Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
+                    Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
+                    simWindow.MyCanvas.Children.Add(ellipse);
 
-                        circle.update();
+                    ellipseCircleDict[ellipse] = circle;
+                }
 
-                        // Create a lock object
-                        object lockObject = new object();
+                // Create a barrier with a participant count of the number of circles
+                Barrier barrier = new Barrier(ellipseCircleDict.Count);
 
-                        lock (lockObject) //ellipseCircleDict jest współdzielonym zasobem, który wymaga synchronizacji (warunki wyścigu, gdzie dwa wątki próbują jednocześnie modyfikować ten sam okrąg)
+                // Create a lock object
+                object lockObject = new object();
+
+                foreach (var pair in ellipseCircleDict)
+                {
+                    Task.Run(() =>
+                    {
+                        while (true)
                         {
-                            // Check for collisions with other circles
-                            foreach (var otherPair in ellipseCircleDict)
+                            var ellipse = pair.Key;
+                            var circle = pair.Value;
+
+                            circle.update();
+
+                            lock (lockObject) //ellipseCircleDict nie chcemy aby dwa watki jednoczenie modyfikowały pozycje elpse w liscie
                             {
-                                if (otherPair.Key != ellipse)
+                                // Check for collisions with other circles
+                                foreach (var otherPair in ellipseCircleDict)
                                 {
-                                    var otherCircle = otherPair.Value;
-                                    if (circle.isCollidingWith(otherCircle))
+                                    if (otherPair.Key != ellipse)
                                     {
-                                        circle.HandleCollision(otherCircle);
+                                        var otherCircle = otherPair.Value;
+                                        if (circle.isCollidingWith(otherCircle))
+                                        {
+                                            circle.HandleCollision(otherCircle);
+                                        }
                                     }
                                 }
                             }
+                                // Check for collisions with walls
+                                if (circle.getx() - circle.getRadius() < 0 || circle.getx() + circle.getRadius() > simWindow.ActualWidth)
+                                {
+                                    circle.reverseXVelocity(simWindow.ActualWidth);
+                                }
+                                if (circle.gety() - circle.getRadius() < 0 || circle.gety() + circle.getRadius() > simWindow.ActualHeight - SystemParameters.WindowCaptionHeight)
+                                {
+                                    circle.reverseYVelocity(simWindow.ActualHeight - SystemParameters.WindowCaptionHeight);
+                                }
+                            
 
-                            // Check for collisions with walls
-                            if (circle.getx() - circle.getRadius() < 0 || circle.getx() + circle.getRadius() > simWindow.ActualWidth)
+                            // Signal the barrier that this thread is done
+                            barrier.SignalAndWait(); //nierowne rozpoczecie
+
+                            simWindow.Dispatcher.Invoke(() =>
                             {
-                                circle.reverseXVelocity();
-                            }
-                            if (circle.gety() - circle.getRadius() < 0 || circle.gety() + circle.getRadius() > simWindow.ActualHeight - SystemParameters.WindowCaptionHeight)
-                            {
-                                circle.reverseYVelocity();
-                            }
+                                Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
+                                Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
+                            });
+
+                            Task.Delay(20).Wait();
                         }
+                    });
+                }
+            };
+            simWindow.Show();
 
-                        simWindow.Dispatcher.Invoke(() =>
-                        {
-                            Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
-                            Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
-                        });
-
-                        Task.Delay(20).Wait();
-                    }
-                });
-
-            }
         }
     }
 

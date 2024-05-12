@@ -128,14 +128,29 @@ namespace TPW.Model
             return distance <= (this.Radius + otherCircle.getRadius());
         }
 
-        internal void reverseXVelocity()
+        internal void reverseXVelocity(double actualWidth)
         {
             this.speedX =  - this.speedX;
+            if (this.x + this.Radius > actualWidth)
+            {
+                this.x = actualWidth - this.Radius;
+            } else if (this.x - this.Radius < 0)
+            {
+                this.x = 0 + this.Radius;
+            }
         }
 
-        internal void reverseYVelocity()
+        internal void reverseYVelocity(double v)
         {
             this.speedY = - this.speedY;
+            if (this.y + this.Radius > v)
+            {
+                this.y = v - this.Radius;
+            }
+            else if (this.y - this.Radius < 0)
+            {
+                this.y = 0 + this.Radius;
+            }
         }
     }
 }
