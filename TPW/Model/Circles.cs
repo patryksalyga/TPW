@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TPW.Model
 {
-    class Circles
+    public class Circles
     {
         public List<Circle> CirclesList { get; private set; }
 

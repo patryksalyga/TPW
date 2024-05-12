@@ -119,7 +119,7 @@ namespace TPW.Model
             other.setY(other.gety() + overlap * (this.gety() - other.gety()) / distance);
         }
 
-        internal bool isCollidingWith(Circle otherCircle)
+        public bool isCollidingWith(Circle otherCircle)
         {
             double dx = this.x - otherCircle.getx();
             double dy = this.y - otherCircle.gety();
@@ -128,7 +128,7 @@ namespace TPW.Model
             return distance <= (this.Radius + otherCircle.getRadius());
         }
 
-        internal void reverseXVelocity(double actualWidth)
+        public void reverseXVelocity(double actualWidth)
         {
             this.speedX =  - this.speedX;
             if (this.x + this.Radius > actualWidth)
@@ -140,7 +140,7 @@ namespace TPW.Model
             }
         }
 
-        internal void reverseYVelocity(double v)
+        public void reverseYVelocity(double v)
         {
             this.speedY = - this.speedY;
             if (this.y + this.Radius > v)
