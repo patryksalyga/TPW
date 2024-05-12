@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Accord" Version="3.8.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
   </ItemGroup>
 

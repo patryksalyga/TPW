@@ -13,10 +13,28 @@ namespace TPW.Model
         public Circles(int n, double height, double width)
         {
             CirclesList = new List<Circle>();
+            Boolean flag;
 
             for (int i = 0; i < n; i++)
             {
-                CirclesList.Add(new Circle(height, width));
+                flag = false;
+                for(int j = 0; j < CirclesList.Count; j++)
+                {
+                    Circle NewCircle = new Circle(height, width);
+                    if (NewCircle.isCollidingWith(CirclesList[j]))
+                    {
+                        flag = true;
+                    }
+
+                }
+                if(!flag)
+                {
+                    CirclesList.Add(new Circle(height, width));
+                }
+                else
+                {
+                    i--;
+                }
             }
         }
 

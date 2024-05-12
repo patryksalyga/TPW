@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Accord.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,27 +37,60 @@ namespace TPW.ViewModel
                 ellipseCircleDict[ellipse] = circle;
             }
 
-            new Thread(() =>
+            foreach (var pair in ellipseCircleDict)
             {
-                while (true)
+                Task.Run(() =>
                 {
-                    circles.updateCircles();
-
-                    simWindow.Dispatcher.Invoke(() =>
+                    while (true)
                     {
-                        foreach (var pair in ellipseCircleDict)
+                        var ellipse = pair.Key;
+                        var circle = pair.Value;
+
+                        circle.update();
+
+                        // Create a lock object
+                        object lockObject = new object();
+
+                        lock (lockObject) //ellipseCircleDict jest współdzielonym zasobem, który wymaga synchronizacji (warunki wyścigu, gdzie dwa wątki próbują jednocześnie modyfikować ten sam okrąg)
                         {
-                            var ellipse = pair.Key;
-                            var circle = pair.Value;
+                            // Check for collisions with other circles
+                            foreach (var otherPair in ellipseCircleDict)
+                            {
+                                if (otherPair.Key != ellipse)
+                                {
+                                    var otherCircle = otherPair.Value;
+                                    if (circle.isCollidingWith(otherCircle))
+                                    {
+                                        circle.HandleCollision(otherCircle);
+                                    }
+                                }
+                            }
+
+                            // Check for collisions with walls
+                            if (circle.getx() - circle.getRadius() < 0 || circle.getx() + circle.getRadius() > simWindow.ActualWidth)
+                            {
+                                circle.reverseXVelocity();
+                            }
+                            if (circle.gety() - circle.getRadius() < 0 || circle.gety() + circle.getRadius() > simWindow.ActualHeight - SystemParameters.WindowCaptionHeight)
+                            {
+                                circle.reverseYVelocity();
+                            }
+                        }
+
+                        simWindow.Dispatcher.Invoke(() =>
+                        {
                             Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());
                             Canvas.SetTop(ellipse, circle.gety() - circle.getRadius());
-                        }
-                    });
+                        });
 
-                    Thread.Sleep(20);
-                }
-            }).Start();
+                        Task.Delay(20).Wait();
+                    }
+                });
+
+            }
         }
-
     }
+
+
 }
+
