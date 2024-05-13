@@ -10,6 +10,7 @@ namespace TPW.Model
     {
         public List<Circle> CirclesList { get; private set; }
 
+        
         public Circles(int n, double height, double width)
         {
             CirclesList = new List<Circle>();
@@ -39,12 +40,8 @@ namespace TPW.Model
             }
         }
 
-        public void updateCircles()
-        {
-            foreach (var circle in CirclesList)
-            {
-                circle.update();
-            }
+        
+        
         }
 
     }
