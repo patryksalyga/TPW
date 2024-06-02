@@ -46,11 +46,6 @@ namespace TPW.Prezentacja.Model
             return ellipseCircleDict;
         }
 
-        public object GetLockObject()
-        {
-            return lockObject;
-        }
-
         public void UpdateEllipsePosition(Ellipse ellipse, Circle circle)
         {
             Canvas.SetLeft(ellipse, circle.getx() - circle.getRadius());

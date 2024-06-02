@@ -32,7 +32,7 @@ namespace TPW.ViewModel
                 circleDrawer.DrawCircles(circles);
 
                 Dictionary<Ellipse, Circle> ellipseCircleDict = circleDrawer.GetEllipseCircleDict();
-                object lockObject = circleDrawer.GetLockObject();
+                object lockObject = ellipseCircleDict;
 
                 // Create a barrier with a participant count of the number of circles
                 Barrier barrier = new Barrier(ellipseCircleDict.Count);
