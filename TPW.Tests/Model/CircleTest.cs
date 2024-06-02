@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TPW.Model;
+using TPW.Dane;
+using TPW.Logika;
 
 namespace TPW.Tests.Model
 {

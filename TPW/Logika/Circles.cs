@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TPW.Dane;
 
-namespace TPW.Model
+namespace TPW.Logika
 {
     public class Circles
     {
@@ -20,7 +21,7 @@ namespace TPW.Model
                 Circle NewCircle = new Circle(height, width);
 
                 flag = false;
-                for(int j = 0; j < CirclesList.Count; j++)
+                for (int j = 0; j < CirclesList.Count; j++)
                 {
                     if (NewCircle.isCollidingWith(CirclesList[j]))
                     {
@@ -28,7 +29,7 @@ namespace TPW.Model
                     }
                 }
 
-                if(!flag)
+                if (!flag)
                 {
                     CirclesList.Add(NewCircle);
                 }

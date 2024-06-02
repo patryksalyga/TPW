@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
-using TPW.Model;
+using TPW.Logika;
 
 namespace TPW
 {

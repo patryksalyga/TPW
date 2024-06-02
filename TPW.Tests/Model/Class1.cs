@@ -1,4 +1,4 @@
-﻿using TPW.Model;
+﻿using TPW.Logika;
 
 namespace TPW.Tests.Model
 {

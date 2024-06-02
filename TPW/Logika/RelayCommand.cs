@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace TPW.Model
+namespace TPW.Logika
 {
     public class RelayCommand : ICommand
     {

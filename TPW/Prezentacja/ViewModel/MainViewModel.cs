@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using TPW.Model;
+using TPW.Logika;
 using TPW.View;
 
-namespace TPW.ViewModel
+namespace TPW.Prezentacja.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
@@ -22,7 +22,7 @@ namespace TPW.ViewModel
 
         private void SimulationStart(object obj)
         {
-            SimWindow simWindow = new SimWindow(Int32.Parse(ScreenVal));
+            SimWindow simWindow = new SimWindow(int.Parse(ScreenVal));
             //simWindow.Show();
 
             Application.Current.MainWindow.Close();
