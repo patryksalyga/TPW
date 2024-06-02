@@ -11,6 +11,7 @@ namespace TPW.Logika
     {
         public List<Circle> CirclesList { get; private set; }
 
+        
         public Circles(int n, double height, double width)
         {
             CirclesList = new List<Circle>();
@@ -46,6 +47,7 @@ namespace TPW.Logika
             {
                 circle.update();
             }
+        
         }
 
     }
